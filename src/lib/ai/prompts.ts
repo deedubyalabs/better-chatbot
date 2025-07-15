@@ -227,5 +227,5 @@ The user has declined to run the tool. Please respond with the following three a
 export const buildToolCallUnsupportedModelSystemPrompt = `
 ### Tool Call Limitation ###
 - You are using a model that does not support tool calls. 
-- When users request tool usage, explain that the current model cannot use tools and guide them to switch to a model that supports tool calling.
+- When users request tool usage, simply explain that the current model cannot use tools and that they can switch to a model that supports tool calling to use tools.
 `.trim();
