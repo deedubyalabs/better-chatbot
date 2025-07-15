@@ -40,11 +40,17 @@ export type ChatMessage = {
 
 export const ChatMentionSchema = z.discriminatedUnion("type", [
   z.object({
-    type: z.literal("tool"),
+    type: z.literal("mcpTool"),
     name: z.string(),
     description: z.string().optional(),
     serverName: z.string().optional(),
     serverId: z.string(),
+  }),
+  z.object({
+    type: z.literal("defaultTool"),
+    name: z.string(),
+    label: z.string(),
+    description: z.string().optional(),
   }),
   z.object({
     type: z.literal("mcpServer"),
@@ -52,6 +58,19 @@ export const ChatMentionSchema = z.discriminatedUnion("type", [
     description: z.string().optional(),
     toolCount: z.number().optional(),
     serverId: z.string(),
+  }),
+  z.object({
+    type: z.literal("workflow"),
+    name: z.string(),
+    description: z.string().optional(),
+    workflowId: z.string(),
+    icon: z
+      .object({
+        type: z.literal("emoji"),
+        value: z.string(),
+        style: z.record(z.string(), z.string()).optional(),
+      })
+      .optional(),
   }),
 ]);
 
@@ -63,10 +82,6 @@ export type ChatMessageAnnotation = {
   toolChoice?: "auto" | "none" | "manual";
   [key: string]: any;
 };
-
-export enum AppDefaultToolkit {
-  Visualization = "visualization",
-}
 
 export const chatApiSchemaRequestBodySchema = z.object({
   id: z.string(),
@@ -174,3 +189,12 @@ export type ChatRepository = {
     messages: PartialBy<ChatMessage, "createdAt">[],
   ): Promise<ChatMessage[]>;
 };
+
+export const ClientToolInvocationZodSchema = z.object({
+  action: z.enum(["manual", "direct"]),
+  result: z.any().optional(),
+});
+
+export type ClientToolInvocation = z.infer<
+  typeof ClientToolInvocationZodSchema
+>;

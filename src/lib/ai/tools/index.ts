@@ -1,13 +1,16 @@
-import { createPieChartTool } from "./create-pie-chart";
-import { createBarChartTool } from "./create-bar-chart";
-import { createLineChartTool } from "./create-line-chart";
-import { DefaultToolName } from "./app-default-tool-name";
-import { AppDefaultToolkit } from "app-types/chat";
+export enum AppDefaultToolkit {
+  Visualization = "visualization",
+  WebSearch = "webSearch",
+  Http = "http",
+  Code = "code",
+}
 
-export const defaultTools = {
-  [AppDefaultToolkit.Visualization]: {
-    [DefaultToolName.CreatePieChart]: createPieChartTool,
-    [DefaultToolName.CreateBarChart]: createBarChartTool,
-    [DefaultToolName.CreateLineChart]: createLineChartTool,
-  },
-};
+export enum DefaultToolName {
+  CreatePieChart = "createPieChart",
+  CreateBarChart = "createBarChart",
+  CreateLineChart = "createLineChart",
+  WebSearch = "webSearch",
+  WebContent = "webContent",
+  Http = "http",
+  JavascriptExecution = "mini-javascript-execution",
+}

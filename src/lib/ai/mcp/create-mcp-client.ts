@@ -94,7 +94,7 @@ export class MCPClient {
       this.locker.lock();
 
       const client = new Client({
-        name: "mcp-chatbot-client",
+        name: "better-chatbot",
         version: "1.0.0",
       });
 
@@ -135,8 +135,9 @@ export class MCPClient {
             },
           });
           await client.connect(transport);
-        } catch {
-          this.log.info(
+        } catch (streamableHttpError) {
+          this.log.error(streamableHttpError);
+          this.log.warn(
             "Streamable HTTP connection failed, falling back to SSE transport",
           );
           const transport = new SSEClientTransport(url, {

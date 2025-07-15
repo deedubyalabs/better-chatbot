@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dubya Command Center",
+  title: "better-chatbot",
   description:
-    "Dubya Command Center is DaWaun's Second Brain and strategic partner, leveraging MCP Tools to amplify his effectiveness.",
+    "Better Chatbot is a chatbot that uses the Tools to answer questions.",
 };
 
 // const themes = BASE_THEMES.flatMap((t) => [t, `${t}-dark`]);

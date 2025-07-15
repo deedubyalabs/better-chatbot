@@ -23,6 +23,14 @@ import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "ui/tooltip";
 import { useMcpList } from "@/hooks/queries/use-mcp-list";
 
+import {
+  tavilySearchSchema,
+  tavilySearchTool,
+  tavilyWebContentSchema,
+  tavilyWebContentTool,
+} from "lib/ai/tools/web/web-search";
+import { DefaultToolName } from "lib/ai/tools";
+
 export const ToolNodeDataConfig = memo(function ({
   data,
 }: {
@@ -55,7 +63,21 @@ export const ToolNodeDataConfig = memo(function ({
         };
       });
     });
-    return mcpTools;
+    const defaultTools: WorkflowToolKey[] = [
+      {
+        type: "app-tool",
+        id: DefaultToolName.WebSearch,
+        description: tavilySearchTool.description!,
+        parameterSchema: tavilySearchSchema,
+      },
+      {
+        type: "app-tool",
+        id: DefaultToolName.WebContent,
+        description: tavilyWebContentTool.description!,
+        parameterSchema: tavilyWebContentSchema,
+      },
+    ];
+    return [...mcpTools, ...defaultTools];
   }, [mcpList]);
 
   useEffect(() => {

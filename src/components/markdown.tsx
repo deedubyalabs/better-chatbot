@@ -138,8 +138,10 @@ const components: Partial<Components> = {
   img: ({ node, children, ...props }) => {
     const { src, alt, ...rest } = props;
 
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img className="mx-auto rounded-lg" src={src} alt={alt} {...rest} />;
+    return src ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img className="mx-auto rounded-lg" src={src} alt={alt} {...rest} />
+    ) : null;
   },
 };
 

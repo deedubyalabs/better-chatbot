@@ -38,19 +38,34 @@ import { useCallback } from "react";
 import { GithubIcon } from "ui/github-icon";
 import { DiscordIcon } from "ui/discord-icon";
 import { useThemeStyle } from "@/hooks/use-theme-style";
+import { Session, User } from "better-auth";
 
-export function AppSidebarUser() {
+export function AppSidebarUser({
+  session,
+}: { session?: { session: Session; user: User } }) {
   const appStoreMutate = appStore((state) => state.mutate);
-  const { data } = authClient.useSession();
   const t = useTranslations("Layout");
 
-  const user = data?.user;
+  const user = session?.user;
 
   const logout = () => {
     authClient.signOut().finally(() => {
       window.location.href = "/sign-in";
     });
   };
+
+  useSWR(
+    "/session-update",
+    () =>
+      authClient.getSession().then(() => {
+        console.log(`session-update: ${new Date().toISOString()}`);
+      }),
+    {
+      refreshIntervalOnFocus: false,
+      refreshWhenHidden: true,
+      refreshInterval: 1000 * 60 * 5,
+    },
+  );
 
   return (
     <SidebarMenu>
@@ -119,7 +134,7 @@ export function AppSidebarUser() {
             <DropdownMenuItem
               onClick={() => {
                 window.open(
-                  "https://github.com/cgoinglove/mcp-client-chatbot/issues/new",
+                  "https://github.com/cgoinglove/better-chatbot/issues/new",
                   "_blank",
                 );
               }}

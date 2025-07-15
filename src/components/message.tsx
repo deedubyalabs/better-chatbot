@@ -13,10 +13,11 @@ import {
   ToolMessagePart,
   ReasoningPart,
 } from "./message-parts";
-import { Think } from "ui/think";
 import { Terminal, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "ui/button";
 import { useTranslations } from "next-intl";
+import { ChatMessageAnnotation, ClientToolInvocation } from "app-types/chat";
+import { Think } from "ui/think";
 
 interface Props {
   message: UIMessage;
@@ -26,7 +27,7 @@ interface Props {
   setMessages: UseChatHelpers["setMessages"];
   reload: UseChatHelpers["reload"];
   className?: string;
-  onPoxyToolCall?: (answer: boolean) => void;
+  onPoxyToolCall?: (result: ClientToolInvocation) => void;
   status: UseChatHelpers["status"];
   messageIndex: number;
   isError?: boolean;
@@ -46,6 +47,20 @@ const PurePreviewMessage = ({
   isError,
 }: Props) => {
   const isUserMessage = useMemo(() => message.role === "user", [message.role]);
+
+  const showThink = useMemo(() => {
+    if (isLoading && isLastMessage) {
+      const lastPart = message.parts.at(-1);
+      if (lastPart?.type == "text" && !lastPart.text?.trim()) {
+        return true;
+      }
+    }
+    return false;
+  }, [isLoading, isLastMessage, message.parts]);
+
+  if (message.role == "system") {
+    return null; // system message is not shown
+  }
   return (
     <div className="w-full mx-auto max-w-3xl px-6 group/message">
       <div
@@ -119,14 +134,20 @@ const PurePreviewMessage = ({
 
             if (part.type === "tool-invocation") {
               const isLast = isLastMessage && isLastPart;
+
+              const isManualToolInvocation = (
+                message.annotations as ChatMessageAnnotation[]
+              )?.some((a) => a.toolChoice == "manual");
+
               return (
                 <ToolMessagePart
                   isLast={isLast}
-                  message={message}
+                  messageId={message.id}
+                  isManualToolInvocation={isManualToolInvocation}
                   showActions={
                     isLastMessage ? isLastPart && !isLoading : isLastPart
                   }
-                  onPoxyToolCall={isLast ? onPoxyToolCall : undefined}
+                  onPoxyToolCall={onPoxyToolCall}
                   key={key}
                   part={part}
                   isError={isError}
@@ -135,7 +156,7 @@ const PurePreviewMessage = ({
               );
             }
           })}
-          {isLoading && isLastMessage && <Think />}
+          {showThink && <Think />}
         </div>
       </div>
     </div>
@@ -153,7 +174,7 @@ export const PreviewMessage = memo(
     if (prevProps.message.annotations !== nextProps.message.annotations)
       return false;
     if (prevProps.isError !== nextProps.isError) return false;
-    if (prevProps.onPoxyToolCall !== nextProps.onPoxyToolCall) return false;
+    if (!!prevProps.onPoxyToolCall !== !!nextProps.onPoxyToolCall) return false;
     if (!equal(prevProps.message.parts, nextProps.message.parts)) return false;
     return true;
   },

@@ -21,8 +21,11 @@ import { isShortcutEvent, Shortcuts } from "lib/keyboard-shortcuts";
 import { AppSidebarUser } from "./app-sidebar-user";
 import { PanelLeft } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Session, User } from "better-auth";
 
-export function AppSidebar() {
+export function AppSidebar({
+  session,
+}: { session?: { session: Session; user: User } }) {
   const { toggleSidebar, setOpenMobile } = useSidebar();
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -66,7 +69,7 @@ export function AppSidebar() {
                   router.refresh();
                 }}
               >
-                <h4 className="font-bold">mcp/chat-bot</h4>
+                <h4 className="font-bold">better-chatbot</h4>
                 <div
                   className="ml-auto block sm:hidden"
                   onClick={(e) => {
@@ -91,7 +94,7 @@ export function AppSidebar() {
         </div>
       </SidebarContent>
       <SidebarFooter className="flex flex-col items-stretch space-y-2">
-        <AppSidebarUser />
+        <AppSidebarUser session={session} />
       </SidebarFooter>
     </Sidebar>
   );
