@@ -20,6 +20,7 @@ import {
   buildMcpServerCustomizationsSystemPrompt,
   buildProjectInstructionsSystemPrompt,
   buildUserSystemPrompt,
+  buildToolCallUnsupportedModelSystemPrompt,
   mentionPrompt,
 } from "lib/ai/prompts";
 import {
@@ -206,7 +207,9 @@ export async function POST(request: Request) {
           buildUserSystemPrompt(session.user, userPreferences),
           buildProjectInstructionsSystemPrompt(thread?.instructions),
           buildMcpServerCustomizationsSystemPrompt(mcpServerCustomizations),
-          mentions.length ? mentionPrompt : undefined,
+          mentions.length > 0 && mentionPrompt,
+          isToolCallUnsupportedModel(model) &&
+            buildToolCallUnsupportedModelSystemPrompt,
         );
 
         const vercelAITooles = safe({ ...MCP_TOOLS, ...WORKFLOW_TOOLS })
