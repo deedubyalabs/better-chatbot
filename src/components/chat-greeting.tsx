@@ -6,30 +6,21 @@ import { useMemo } from "react";
 import { FlipWords } from "ui/flip-words";
 import { useTranslations } from "next-intl";
 
-function getGreetingByTime() {
-  const hour = new Date().getHours();
-  if (hour < 12) return "goodMorning";
-  if (hour < 18) return "goodAfternoon";
-  return "goodEvening";
-}
-
 export const ChatGreeting = () => {
   const { data: session } = authClient.useSession();
 
-  const t = useTranslations("Chat.Greeting");
+  const _t = useTranslations("Chat.Greeting");
 
   const user = session?.user;
 
   const word = useMemo(() => {
     if (!user?.name) return "";
     const words = [
-      t(getGreetingByTime(), { name: user.name }),
-      t("niceToSeeYouAgain", { name: user.name }),
-      t("whatAreYouWorkingOnToday", { name: user.name }),
-      t("letMeKnowWhenYoureReadyToBegin"),
-      t("whatAreYourThoughtsToday"),
-      t("whereWouldYouLikeToStart"),
-      t("whatAreYouThinking", { name: user.name }),
+      `What's the mission, D?`,
+      `Ready to amplify your effectiveness, DaWaun. What's next?`,
+      `Dubya online. Let's build this empire.`,
+      `Your Second Brain is active. What's on your mind, D?`,
+      `Let's get to work, my guy. What's our first move?`,
     ];
     return words[Math.floor(Math.random() * words.length)];
   }, [user?.name]);

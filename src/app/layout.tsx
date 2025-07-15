@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MCP Chat",
+  title: "Dubya Command Center",
   description:
-    "MCP Chat is a chatbot that uses the MCP Tools to answer questions.",
+    "Dubya Command Center is DaWaun's Second Brain and strategic partner, leveraging MCP Tools to amplify his effectiveness.",
 };
 
 // const themes = BASE_THEMES.flatMap((t) => [t, `${t}-dark`]);
